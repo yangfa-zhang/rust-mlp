@@ -4,3 +4,4 @@ conda activate fafa
 pip install maturin
 maturin init 
 maturin develop --release 
+maturin build --release
