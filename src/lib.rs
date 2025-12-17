@@ -10,12 +10,14 @@ use candle_nn::{
 };
 mod mytest;
 use mytest::Number;
-
+mod mlp;
+use mlp::MLP;
 #[pymodule]
 fn rust_mlp(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     m.add_function(wrap_pyfunction!(let_me_try, m)?)?;
     m.add_class::<Number>()?;
+    m.add_class::<MLP>()?;
     Ok(())
 }
 

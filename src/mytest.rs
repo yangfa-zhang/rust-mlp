@@ -1,4 +1,5 @@
 use pyo3::prelude::*;
+use pyo3::types::PyModule;
 
 #[pyclass]
 pub struct Number(i32);
@@ -10,3 +11,4 @@ impl Number {
         Number(value)
     }
 }
+
