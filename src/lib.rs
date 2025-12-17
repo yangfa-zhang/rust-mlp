@@ -8,20 +8,17 @@ use candle_core::{DType, Device, Tensor};
 use candle_nn::{
     linear, Linear, Module, VarBuilder, VarMap, Optimizer,
 };
+mod mytest;
+use mytest::Number;
 
-/// ------------------------------
-/// Python module entry (PyO3 0.21+)
-/// ------------------------------
 #[pymodule]
 fn rust_mlp(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     m.add_function(wrap_pyfunction!(let_me_try, m)?)?;
+    m.add_class::<Number>()?;
     Ok(())
 }
 
-/// ------------------------------
-/// Python functions
-/// ------------------------------
 #[pyfunction]
 fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
     Ok((a + b).to_string())
@@ -33,9 +30,6 @@ fn let_me_try() -> PyResult<()> {
         .map_err(|e| PyRuntimeError::new_err(e.to_string()))
 }
 
-/// ------------------------------
-/// Inner Rust logic (anyhow world)
-/// ------------------------------
 fn run_training() -> anyhow::Result<()> {
     let device = Device::Cpu;
 
@@ -64,7 +58,6 @@ fn run_training() -> anyhow::Result<()> {
 
     let model = SimpleNN::new(train_d2, vb)?;
 
-    // ✅ candle-nn 0.9 正确写法
     let mut optimizer =
         candle_nn::AdamW::new_lr(varmap.all_vars(), 1e-2)?;
 
@@ -74,9 +67,6 @@ fn run_training() -> anyhow::Result<()> {
     Ok(())
 }
 
-/// ------------------------------
-/// Model
-/// ------------------------------
 #[derive(Debug)]
 struct SimpleNN {
     fc1: Linear,
@@ -100,9 +90,6 @@ impl Module for SimpleNN {
     }
 }
 
-/// ------------------------------
-/// Training
-/// ------------------------------
 fn train_model(
     model: &SimpleNN,
     x_train: &Tensor,
@@ -137,9 +124,6 @@ fn evaluate_model(
     Ok(())
 }
 
-/// ------------------------------
-/// Data
-/// ------------------------------
 #[derive(Debug, serde::Deserialize)]
 struct Data {
     X_train: Vec<Vec<f32>>,
