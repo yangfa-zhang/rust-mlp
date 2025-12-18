@@ -1,14 +1,18 @@
 # rust-mlp
 用rust训练mlp，以python接口形式调用
 ## 在自己的环境中使用
+
 - 创建环境
 ```bash
 conda create -n your_env_name python=3.11 # 必须>=3.9
 conda activate your_env_name
 ```
-- 下载wheel文件后
+- 下载到环境
 ```bash
-pip install Path/to/*.whl
+git clone git@github.com:yangfa-zhang/rust-mlp.git
+cd rust-mlp
+pip install maturin
+maturin develop --release
 ```
 - 在python环境中使用
 ```Python
