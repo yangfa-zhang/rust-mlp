@@ -13,29 +13,40 @@ pip install Path/to/*.whl
 - 在python环境中使用
 ```Python
 import rust_mlp
-rust_mlp.let_me_try()
+import json
+with open('fetch_california_housing.json', encoding='utf-8') as f:
+    data = json.load(f) 
+X_train = data['X_train']
+X_test  = data['X_test']
+y_train = data['y_train']
+y_test  = data['y_test']
+
+input_dim = len(X_train[0])
+model = rust_mlp.MLP(input_dim,lr = 0.01)
+model.train(X_train,y_train, epochs = 20)
+model.evaluate(X_test,y_test)
 ```
 预期结果如下：
 ```
-Epoch 10 | Train Loss: 1.628042
-Epoch 20 | Train Loss: 1.206229
-Epoch 30 | Train Loss: 0.876774
-Epoch 40 | Train Loss: 0.737402
-Epoch 50 | Train Loss: 0.644500
-Epoch 60 | Train Loss: 0.576381
-Epoch 70 | Train Loss: 0.524079
-Epoch 80 | Train Loss: 0.482977
-Epoch 90 | Train Loss: 0.451547
-Epoch 100 | Train Loss: 0.431264
-Epoch 110 | Train Loss: 0.417604
-Epoch 120 | Train Loss: 0.407959
-Epoch 130 | Train Loss: 0.400804
-Epoch 140 | Train Loss: 0.395103
-Epoch 150 | Train Loss: 0.390289
-Epoch 160 | Train Loss: 0.386080
-Epoch 170 | Train Loss: 0.382233
-Epoch 180 | Train Loss: 0.378714
-Epoch 190 | Train Loss: 0.375436
-Epoch 200 | Train Loss: 0.372300
-Test Loss: 0.385307
+Loss: 4.4525466
+Loss: 3.3261764
+Loss: 2.539338
+Loss: 2.008424
+Loss: 1.6563666
+Loss: 1.4215927
+Loss: 1.2626717
+Loss: 1.1582772
+Loss: 1.0978976
+Loss: 1.0723116
+Loss: 1.0687258
+Loss: 1.073826
+Loss: 1.0768875
+Loss: 1.0705063
+Loss: 1.0518045
+Loss: 1.0223864
+Loss: 0.9862392
+Loss: 0.9472292
+Loss: 0.9076066
+Loss: 0.86793756
+Evaluation Loss: 0.82283765
 ```

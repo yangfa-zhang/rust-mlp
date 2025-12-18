@@ -40,13 +40,15 @@ impl MLP {
                 .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
             let loss = candle_nn::loss::mse(&output, &y_tensor)
                 .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
+            println!("Loss: {}", loss.to_scalar::<f32>()
+                .map_err(|e| PyRuntimeError::new_err(e.to_string()))?);
             self.optimizer.backward_step(&loss)
                 .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
         }
         Ok(())
     }
 
-    fn evaluate(&self, x: Vec<Vec<f32>>, y: Vec<f32>) -> PyResult<f32> {
+    fn evaluate(&self, x: Vec<Vec<f32>>, y: Vec<f32>) -> PyResult<()> {
         let n = x.len();
         let d = x[0].len();
         let x_flat = x.into_iter().flatten().collect::<Vec<_>>();
@@ -58,8 +60,9 @@ impl MLP {
             .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
         let loss = candle_nn::loss::mse(&output, &y_tensor)
             .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
-        Ok(loss.to_scalar::<f32>()
-            .map_err(|e| PyRuntimeError::new_err(e.to_string()))?)
+        println!("Evaluation Loss: {}", loss.to_scalar::<f32>()
+            .map_err(|e| PyRuntimeError::new_err(e.to_string()))?);
+        Ok(())
     }
 }
 
