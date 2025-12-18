@@ -5,7 +5,7 @@ use candle_core::{DType, Device, Tensor};
 use candle_nn::{
     linear, Linear, Module, VarBuilder, VarMap, Optimizer,
 };
-
+use crate::base::Model;
 #[pyclass]
 pub struct MLP {
     model: SimpleNN,
@@ -27,6 +27,19 @@ impl MLP {
         Ok(Self { model, optimizer, device })
     }
 
+    fn train(&mut self, x: Vec<Vec<f32>>, y: Vec<f32>, epochs: usize) -> PyResult<()> {
+        Model::train(self, x, y, epochs)
+            .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
+        Ok(())
+    }
+
+    fn evaluate(&self, x: Vec<Vec<f32>>, y: Vec<f32>) -> PyResult<()> {
+        Model::evaluate(self, x, y)
+            .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
+        Ok(())
+    }
+}
+impl Model for MLP {
     fn train(&mut self, x: Vec<Vec<f32>>, y: Vec<f32>, epochs: usize) -> PyResult<()> {
         let n = x.len();
         let d = x[0].len();
@@ -65,6 +78,7 @@ impl MLP {
         Ok(())
     }
 }
+
 
 #[derive(Debug)]
 struct SimpleNN {

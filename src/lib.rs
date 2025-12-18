@@ -8,7 +8,8 @@ use candle_core::{DType, Device, Tensor};
 use candle_nn::{
     linear, Linear, Module, VarBuilder, VarMap, Optimizer,
 };
-mod mlp;
+pub mod base;   
+pub mod mlp;
 use mlp::MLP;
 #[pymodule]
 fn rust_mlp(m: &Bound<'_, PyModule>) -> PyResult<()> {
