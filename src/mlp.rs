@@ -7,14 +7,14 @@ use candle_nn::{
 };
 use crate::base::Model;
 #[pyclass]
-pub struct MLP {
+pub struct PyMLP {
     model: SimpleNN,
     optimizer: candle_nn::AdamW,
     device: Device,
 }
 
 #[pymethods]
-impl MLP {
+impl PyMLP {
     #[new]
     fn new(input_dim: usize, lr: f64) -> PyResult<Self> {
         let device = Device::Cpu;
@@ -39,7 +39,7 @@ impl MLP {
         Ok(())
     }
 }
-impl Model for MLP {
+impl Model for PyMLP {
     fn train(&mut self, x: Vec<Vec<f32>>, y: Vec<f32>, epochs: usize) -> PyResult<()> {
         let n = x.len();
         let d = x[0].len();
@@ -101,4 +101,10 @@ impl Module for SimpleNN {
         let x = self.fc2.forward(&x)?;
         Ok(x)
     }
+}
+
+#[pymodule]
+pub fn mlp(m: &Bound<'_, PyModule>)-> PyResult<()>{
+    m.add_class::<PyMLP>()?;
+    Ok(())
 }
